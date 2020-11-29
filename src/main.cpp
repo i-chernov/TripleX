@@ -1,13 +1,14 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 using std::cout;
 using std::cin;
 using std::endl;
 using std::string;
-
-int a = 4;
-int b = 3;
-int c = 2;
+using std::srand;
+using std::rand;
+using std::time;
 
 string getASCIIArt() {
     return R"(
@@ -49,34 +50,52 @@ void promptDetails(int level, int numbersAmount, int sum, int product) {
     cout << "Код: ";
 }
 
+void getNewLevel(int level, int& sum, int& product, int& numbersAmount) {
+    sum = 0;
+    product = 1;
+    int number = 0;
+
+    if (level % 5 == 0) ++numbersAmount;
+    for (int i = 0; i < numbersAmount; i++) {
+        number = 1 + (rand() % 9);
+        // cout << number; // Сгенерированное число
+        sum += number;
+        product *= number; 
+    }
+    // cout << endl;
+}
+
 int main() {
-    int currentLevel = 1;
+    int currentLevel = 0;
     int maxLevel = 20;
+    
     int numbersAmount = 2;
-
-    int sum = 0;
-    int product = 0;
-
+    int levelSum, levelProduct;
     int playerGuess = 0;
+    bool nextLevel = true;
 
+    srand(time(NULL));
+
+    system("cls"); // Очищаем консоль (Windows)
     cout << getASCIIArt() << endl;
     
-    while (currentLevel <= maxLevel) {
+    while (currentLevel < maxLevel) {
         cout << endl;
-        promptDetails(currentLevel, numbersAmount, sum, product);
+        if (nextLevel) {
+            ++currentLevel;
+            getNewLevel(currentLevel, levelSum, levelProduct, numbersAmount);
+        }
+        promptDetails(currentLevel, numbersAmount, levelSum, levelProduct);
         
+        cin >> playerGuess;
         cin.clear();
         cin.ignore();
-        cin >> playerGuess;
-
-        if (checkGuess(playerGuess, sum, product)) cout << "Верно" << endl;
-        else {
-            cout << "Неверно" << endl;
-            continue;
-        }
-        ++currentLevel;
+        nextLevel = checkGuess(playerGuess, levelSum, levelProduct);
+        if (!nextLevel) cout << "---Неверно---" << endl;
+        else system("cls");
     }
 
-    cout << "\nВы прошли все уровни!" << endl; 
+    cout << "\nОго! Вы прошли все уровни! Поздравляю:)" << endl;
+    system("pause");
     return 0;
 }            
