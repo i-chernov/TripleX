@@ -9,11 +9,6 @@ int a = 4;
 int b = 3;
 int c = 2;
 
-int sum = a + b + c;
-int product = a * b * c;
-
-int playerGuess = 0;
-
 string getASCIIArt() {
     return R"(
      _______   _       _       __   __
@@ -44,20 +39,44 @@ bool checkGuess(int guess, int correctSum, int correctProduct) {
     return false;
 }
 
-int main() {
-    cout << getASCIIArt() << endl;
-    cout << "Уровень: <1>" << endl;
+void promptDetails(int level, int numbersAmount, int sum, int product) {
+    cout << "Уровень: " << level << " из 20" << endl;
     cout << "Введите секретный код чтобы завершить уровень." << endl;
-    cout << "+ Код состоит из <3> целых чисел" << endl;
+    cout << "+ Код состоит из " << numbersAmount << " целых чисел" << endl;
     cout << "+ Произведение всех чисел должно быть равным " << product << endl;
     cout << "+ Сумма всех чисел должна быть равна " << sum << endl;
     cout << endl;
     cout << "Код: ";
+}
 
-    cin >> playerGuess;
-    cout << endl;
-    if (checkGuess(playerGuess, sum, product)) cout << "Верно" << endl;
-    else cout << "Неверно" << endl;
+int main() {
+    int currentLevel = 1;
+    int maxLevel = 20;
+    int numbersAmount = 2;
+
+    int sum = 0;
+    int product = 0;
+
+    int playerGuess = 0;
+
+    cout << getASCIIArt() << endl;
     
+    while (currentLevel <= maxLevel) {
+        cout << endl;
+        promptDetails(currentLevel, numbersAmount, sum, product);
+        
+        cin.clear();
+        cin.ignore();
+        cin >> playerGuess;
+
+        if (checkGuess(playerGuess, sum, product)) cout << "Верно" << endl;
+        else {
+            cout << "Неверно" << endl;
+            continue;
+        }
+        ++currentLevel;
+    }
+
+    cout << "\nВы прошли все уровни!" << endl; 
     return 0;
 }            
