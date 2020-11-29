@@ -76,6 +76,7 @@ int main() {
 
     srand(time(NULL));
 
+    system("CHCP 65001"); // UTF-8 кодировка для windows
     system("cls"); // Очищаем консоль (Windows)
     cout << getASCIIArt() << endl;
     
